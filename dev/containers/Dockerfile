@@ -2,7 +2,7 @@
 # -- DO NOT USE IN PRODUCTION! --
 
 FROM node:14
-LABEL maintainer "requarks.io"
+LABEL maintainer "biocrossroads"
 
 RUN apt-get update && \
     apt-get install -y bash curl git python make g++ nano openssh-server gnupg && \

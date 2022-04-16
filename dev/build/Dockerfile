@@ -24,7 +24,7 @@ RUN yarn --production --frozen-lockfile --non-interactive
 # --- Release ---
 # ===============
 FROM node:16-alpine
-LABEL maintainer="requarks.io"
+LABEL maintainer="biocrossroads"
 
 RUN apk add bash curl git openssh gnupg sqlite --no-cache && \
     mkdir -p /wiki && \
