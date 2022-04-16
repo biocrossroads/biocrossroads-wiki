@@ -61,19 +61,25 @@ module.exports = {
     try {
       let suggestions = []
       let qry = `
-        SELECT id, path, locale, title, description
-        FROM "pagesVector", to_tsquery(?,?) query
-        WHERE (query @@ "tokens" OR path ILIKE ?)
+        SELECT
+          pv.id,
+          pv.path,
+          pv.locale,
+          pv.title,
+          pv.description,
+          '<span>'||replace(replace(coalesce(ts_headline(?, p.content, query), ''), '<b>', '<mark><b>'), '</b>', '</b></mark>')||'</span>' as headline
+        FROM "pagesVector" pv inner join "pages" p on p.path=pv.path, to_tsquery(?,?) query
+        WHERE (query @@ pv.tokens OR pv.path ILIKE ?)
       `
-      let qryEnd = `ORDER BY ts_rank(tokens, query) DESC`
-      let qryParams = [this.config.dictLanguage, tsquery(q), `%${q.toLowerCase()}%`]
+      let qryEnd = `ORDER BY ts_rank(pv.tokens, query) DESC`
+      let qryParams = [this.config.dictLanguage, this.config.dictLanguage, tsquery(q), `%${q.toLowerCase()}%`]
 
       if (opts.locale) {
-        qry = `${qry} AND locale = ?`
+        qry = `${qry} AND pv.locale = ?`
         qryParams.push(opts.locale)
       }
       if (opts.path) {
-        qry = `${qry} AND path ILIKE ?`
+        qry = `${qry} AND pv.path ILIKE ?`
         qryParams.push(`%${opts.path}`)
       }
       const results = await WIKI.models.knex.raw(`

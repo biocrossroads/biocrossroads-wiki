@@ -25,6 +25,7 @@
                 v-list-item-title(v-text='item.title')
                 v-list-item-subtitle.caption(v-text='item.description')
                 .caption.grey--text(v-text='item.path')
+                v-list-item-content.caption(v-html='item.headline')
               v-list-item-action
                 v-chip(label, outlined) {{item.locale.toUpperCase()}}
             v-divider(v-if='idx < results.length - 1')
