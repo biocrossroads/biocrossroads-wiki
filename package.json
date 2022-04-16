@@ -1,10 +1,9 @@
 {
-  "name": "wiki",
-  "version": "2.0.0",
-  "releaseDate": "2019-01-01T01:01:01.000Z",
-  "description": "A modern, lightweight and powerful wiki app built on NodeJS, Git and Markdown",
+  "name": "biocrossroads-wiki",
+  "version": "1.0.0",
+  "description": "wiki for biocrossroads book of data built on wiki.js",
   "main": "wiki.js",
-  "dev": true,
+  "dev": false,
   "scripts": {
     "start": "node server",
     "dev": "node dev",
@@ -15,23 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Requarks/wiki.git"
+    "url": "git+https://github.com/biocrossroads/biocrossroads-wiki.git"
   },
-  "keywords": [
-    "wiki",
-    "wikis",
-    "docs",
-    "documentation",
-    "markdown",
-    "guides",
-    "knowledge base"
-  ],
-  "author": "Nicolas Giard",
   "license": "AGPL-3.0",
-  "bugs": {
-    "url": "https://github.com/Requarks/wiki/issues"
-  },
-  "homepage": "https://github.com/Requarks/wiki#readme",
+  "homepage": "https://github.com/biocrossroads/biocrossroads-wiki#readme",
   "engines": {
     "node": ">=10.12"
   },
@@ -381,10 +367,5 @@
       "server/views/setup.pug",
       "server/views/legacy/master.pug"
     ]
-  },
-  "collective": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/wikijs",
-    "logo": "https://opencollective.com/opencollective/logo.txt"
   }
 }
