@@ -183,6 +183,10 @@
                     v-btn(icon, tile, v-on='on', @click='print', :aria-label='$t(`common:page.printFormat`)')
                       v-icon(:color='printView ? `primary` : `grey`') mdi-printer
                   span {{$t('common:page.printFormat')}}
+                v-tooltip(bottom)
+                  template(v-slot:activator='{ on }')
+                    v-btn(icon, tile, v-on='on', href='/pdf', target='_blank'): v-icon(color='grey') mdi-file-export
+                  span {{$t('Export To PDF')}}
                 v-spacer
 
           v-flex.page-col-content(xs12, lg9, xl10)

@@ -22,6 +22,10 @@ server/views/master.pug
 server/views/legacy/master.pug
 server/views/setup.pug
 
+# Pdf files
+server/pdf/bd_tmp_*.pdf
+server/pdf/BookOfData_*.pdf
+
 # Webpack
 .webpack-cache
 .fusebox

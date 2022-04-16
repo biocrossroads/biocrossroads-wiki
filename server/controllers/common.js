@@ -1,9 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const pageHelper = require('../helpers/page')
+const pdfExportHelper = require('../helpers/export-pdf')
 const _ = require('lodash')
 const CleanCSS = require('clean-css')
 const moment = require('moment')
+const fs = require('fs')
 
 /* global WIKI */
 
@@ -408,6 +410,22 @@ router.get('/_userav/:uid', async (req, res, next) => {
   }
 
   return res.sendStatus(404)
+})
+
+/**
+ * Download the pdf
+ */
+router.get(['/pdf', '/pdf/*'], async (req, res, next) => {
+  let refresh = false;
+  if (req.path.includes('refresh')) {
+    refresh = true;
+  }
+  pdfExportHelper.exportPdf(refresh, function (filename) {
+    fs.readFile(filename, function (err, data) {
+      res.contentType("application/pdf");
+      res.send(data);
+    });
+  })
 })
 
 /**

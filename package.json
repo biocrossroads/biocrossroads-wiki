@@ -170,7 +170,11 @@
     "validate.js": "0.13.1",
     "winston": "3.3.3",
     "xss": "1.0.10",
-    "yargs": "16.1.0"
+    "yargs": "16.1.0",
+    "axios": "0.26.1",
+    "find-remove": "4.0.4",
+    "pdf-merger-js": "3.4.0",
+    "puppeteer": "13.5.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
