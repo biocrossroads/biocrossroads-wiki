@@ -12,6 +12,7 @@ const PDF_DEST_FILE_PATH_PREFIX = 'BookOfData_';
 const merge = new PDFMerger();
 
 module.exports = {
+  host: 'localhost:3000',
   cleanupFilesSync(path_prefix, age) {
     if (path_prefix === 'null' || path_prefix === '') return;
     try {
@@ -23,12 +24,12 @@ module.exports = {
     } catch (error) { }
   },
   getPages() {
-    const url = 'http://localhost:3000/graphql';
+    const url = `http://${this.host}/graphql`;
     const headers = {
       'content-type': 'application/json'
     };
     const qry = {
-      'query': 'query{pages{list{path,tags}}}'
+      'query': 'query{pages{list{path,tags,isPublished}}}'
     }
     return axios({
       url: url,
@@ -37,7 +38,7 @@ module.exports = {
       data: qry
     }).then(function (response) {
       return response.data.data.pages.list
-        .filter(e => !e.tags.includes('no-pdf'))
+        .filter(e => (!e.tags.includes('no-pdf') && e.isPublished === true))
         .map(e => e.path)
         .sort((a, b) => {
           if (a > b) return 1
@@ -59,7 +60,7 @@ module.exports = {
     while (i < urls.length) {
       await Promise.all(urls.slice(i, i + batch_size).map(async (url, i) => {
         const page = await brower.newPage();
-        await page.goto(`http://localhost:3000/${url}`, {
+        await page.goto(`http://${this.host}/${url}`, {
           waitUntil: 'networkidle2'
         });
 
@@ -89,7 +90,7 @@ module.exports = {
     while (i < urls.length) {
       try {
         const url = urls[i]
-        await page.goto(`http://localhost:3000/${url}`, {
+        await page.goto(`http://${this.host}/${url}`, {
           waitUntil: 'networkidle2'
         });
         await page.pdf({
@@ -148,6 +149,7 @@ module.exports = {
 
   exportPdf(refresh, cb) {
     try {
+      this.host = process.env.BOOK_OF_DATA_HOST || this.host;
       existingFile = this.useExisting();
       if (refresh === false && (existingFile !== undefined && existingFile !== '')) {
         return cb(path.join(PDF_PATH_PREFIX, existingFile));
@@ -155,17 +157,16 @@ module.exports = {
 
         // clean up any old tmp files.
         this.cleanupFilesSync(PDF_FILE_PREFIX, 1);
-        this.cleanupFilesSync(PDF_DEST_FILE_PATH_PREFIX, 1);
 
         // get pages and generate pdf files.
         const uid = crypto.randomUUID();
         const exported_file_name = path.join(PDF_PATH_PREFIX, `${PDF_DEST_FILE_PATH_PREFIX}${uid}.pdf`);
         this.getPages()
           .then(pages => {
-            // pages.unshift('home');
-            return this.generatePdfs(pages, uid);
+            return this.generatePdfs(['home', ...pages.filter(e => e !== 'home')], uid);
           })
           .then(files => {
+            this.cleanupFilesSync(PDF_DEST_FILE_PATH_PREFIX, 1);
             this.mergePdfs(files, exported_file_name, fn => {
               try {
                 this.cleanupFilesSync(PDF_FILE_PREFIX, 1);
