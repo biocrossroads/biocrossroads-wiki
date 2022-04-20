@@ -1,6 +1,6 @@
 {
   "name": "biocrossroads-wiki",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "wiki for biocrossroads book of data built on wiki.js",
   "main": "wiki.js",
   "dev": false,
